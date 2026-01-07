@@ -1,0 +1,512 @@
+/* RFID Logs Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+}
+
+.sidebar {
+  width: 300px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+  height: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar h2 {
+  color: #333;
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.container {
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Header */
+header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+header h1 {
+  color: #333;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+header p {
+  color: #666;
+  font-size: 1.1em;
+}
+
+/* Header Controls */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.test-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.test-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.test-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.mqtt-status {
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.mqtt-status.testing {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.mqtt-status.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.mqtt-status.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+thead {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+th {
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: none;
+  font-size: 1em;
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e9ecef;
+  color: #495057;
+  text-align: center;
+}
+
+tbody tr:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Indicators */
+.status-found {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.status-not-found {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.status-number {
+  color: #007bff;
+  font-weight: 600;
+}
+
+/* RFID Column */
+.rfid-cell {
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  color: #212529;
+}
+
+/* Date & Time Column */
+.datetime-cell {
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.empty-state h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #495057;
+}
+
+.empty-state p {
+  font-size: 1em;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+    order: 1; /* Registered RFIDs first on mobile */
+  }
+
+  .main-content {
+    width: 100%;
+    order: 2; /* RFID Logs second on mobile */
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 1.4em;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    font-size: 1em;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+
+  table {
+    min-width: 600px; /* Ensure table doesn't get too cramped */
+  }
+
+  th, td {
+    padding: 8px 6px;
+    font-size: 0.85em;
+  }
+
+  .datetime-cell {
+    font-size: 0.8em;
+    white-space: nowrap;
+  }
+
+  .rfid-cell {
+    font-size: 0.8em;
+    word-break: break-all;
+    max-width: 120px;
+  }
+
+  /* Mobile-friendly sidebar */
+  .sidebar h2 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+
+  .rfid-item {
+    padding: 12px 10px;
+    margin-bottom: 6px;
+  }
+
+  .rfid-code {
+    font-size: 0.85em;
+    margin-bottom: 6px;
+  }
+
+  .rfid-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .rfid-status {
+    font-size: 0.8em;
+  }
+
+  /* Touch-friendly switches */
+  .switch {
+    cursor: pointer;
+  }
+
+  /* Better button spacing for touch */
+  .switch, .rfid-item {
+    min-height: 44px; /* iOS recommended touch target size */
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 5px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  header h1 {
+    font-size: 1.2em;
+  }
+
+  header p {
+    font-size: 0.9em;
+  }
+
+  .sidebar {
+    padding: 15px;
+  }
+
+  .sidebar h2 {
+    font-size: 1.1em;
+  }
+
+  table {
+    min-width: 500px;
+  }
+
+  th, td {
+    padding: 6px 4px;
+    font-size: 0.8em;
+  }
+
+  .rfid-cell {
+    max-width: 100px;
+  }
+
+  .datetime-cell {
+    font-size: 0.75em;
+  }
+
+  .rfid-item {
+    padding: 10px 8px;
+  }
+
+  .rfid-code {
+    font-size: 0.8em;
+  }
+
+  .rfid-status {
+    font-size: 0.75em;
+  }
+
+  /* Smaller switches for very small screens - removed size changes to keep normal switch */
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+}
+
+.loading::after {
+  content: '...';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
+
+/* Sidebar Styles */
+#registered-rfids {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.rfid-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+}
+
+.rfid-item:hover {
+  background-color: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rfid-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.rfid-active {
+  border-left: 4px solid #28a745;
+}
+
+.rfid-inactive {
+  border-left: 4px solid #dc3545;
+  opacity: 0.7;
+}
+
+.rfid-code {
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  color: #212529;
+  font-size: 0.9em;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.rfid-status {
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rfid-active .rfid-status {
+  color: #28a745;
+}
+
+.rfid-inactive .rfid-status {
+  color: #dc3545;
+}
+
+.empty-sidebar {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.empty-sidebar p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* Switch Styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #28a745;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}

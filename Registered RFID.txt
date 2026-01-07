@@ -1,0 +1,9 @@
+FE6C0004
+23EE9014
+
+SELECT
+    DATE_FORMAT(time_log, '%Y-%m-%d %h:%i:%s %p') AS time_log, 
+    rfid_data,
+    rfid_status
+FROM
+    rfid_logs;

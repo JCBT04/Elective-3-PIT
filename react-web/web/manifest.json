@@ -1,0 +1,17 @@
+{
+  "name": "RFID Logs",
+  "short_name": "RFID Logs",
+  "description": "Real-time RFID logs and status tracking",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

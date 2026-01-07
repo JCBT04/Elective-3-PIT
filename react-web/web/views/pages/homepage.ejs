@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+ <meta name="theme-color" content="#007bff">
+ <link rel="manifest" href="/manifest.json">
+ <title>RFID Logs</title>
+ <link rel="stylesheet" href="/styles/custom.css">
+</head>
+<body>
+ <div class="sidebar">
+   <h2>Registered RFIDs</h2>
+   <div id="registered-rfids">
+     <!-- Registered RFID data will be populated here -->
+     <div class="empty-sidebar">
+       <p>Loading registered RFIDs...</p>
+     </div>
+   </div>
+ </div>
+
+ <div class="main-content">
+   <div class="container">
+     <header>
+       <h1>RFID Logs</h1>
+       <div class="header-controls">
+         <div id="mqtt-status" class="mqtt-status">MQTT: Loading...</div>
+         <button id="test-mqtt-btn" class="test-btn" onclick="testMQTT()">Test MQTT Connection</button>
+       </div>
+     </header>
+
+     <div class="table-container">
+      <table id="rfid-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>RFID</th>
+            <th>Status</th>
+            <th>Date & Time</th>
+          </tr>
+        </thead>
+        <tbody id="rfid-data">
+          <!-- Data will be populated here from database -->
+          <tr>
+            <td colspan="4" class="empty-state">
+              <h3>No Data Available</h3>
+              <p>RFID tracking data will appear here once the database is connected.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to load registered RFIDs for the sidebar
+    async function loadRegisteredRFIDs() {
+      try {
+        const response = await fetch('/api/rfid-reg');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          displayRegisteredRFIDs(result.data);
+        } else {
+          console.error('Failed to load registered RFIDs');
+          document.getElementById('registered-rfids').innerHTML = '<div class="empty-sidebar"><p>No registered RFIDs found</p></div>';
+        }
+      } catch (error) {
+        console.error('Error loading registered RFIDs:', error);
+        document.getElementById('registered-rfids').innerHTML = '<div class="empty-sidebar"><p>Error loading registered RFIDs</p></div>';
+      }
+    }
+
+    // Function to display registered RFIDs in the sidebar
+    function displayRegisteredRFIDs(data) {
+      const container = document.getElementById('registered-rfids');
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<div class="empty-sidebar"><p>No registered RFIDs found</p></div>';
+        return;
+      }
+
+      container.innerHTML = data.map(item => {
+        const statusClass = item.rfid_status ? 'rfid-active' : 'rfid-inactive';
+        const statusText = item.rfid_status ? 'Active' : 'Inactive';
+        const switchChecked = item.rfid_status ? 'checked' : '';
+
+        return `
+          <div class="rfid-item ${statusClass}" data-rfid="${item.rfid_data}">
+            <div class="rfid-code">${item.rfid_data}</div>
+            <div class="rfid-controls">
+              <div class="rfid-status">${statusText}</div>
+              <label class="switch">
+                <input type="checkbox" ${switchChecked}
+                       data-rfid="${item.rfid_data}"
+                       onchange="toggleRFIDStatus('${item.rfid_data}', this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Sync switch states after rendering
+      setTimeout(syncSwitchStates, 100);
+    }
+
+    // Trying to fetch RFID data from the backend API
+    // Using async/await because fetch returns a promise
+    async function loadRFIDData() {
+      try {
+        // Making a GET request to our API endpoint
+        const response = await fetch('/api/rfid-logs');
+        const result = await response.json();
+        
+        // Check if we got data successfully
+        if (result.success && result.data) {
+          displayRFIDData(result.data);
+        } else {
+          console.error('Failed to load RFID data');
+        }
+      } catch (error) {
+        // If something goes wrong (like server is down), show error message
+        console.error('Error loading RFID data:', error);
+        const tbody = document.getElementById('rfid-data');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty-state">
+              <h3>Error Loading Data</h3>
+              <p>Failed to connect to the database. Please check your connection.</p>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // This function takes the data and puts it in the HTML table
+    function displayRFIDData(data) {
+      const tbody = document.getElementById('rfid-data');
+
+      // If there's no data, show a message
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty-state">
+              <h3>No Data Available</h3>
+              <p>No RFID records found in the database.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Sort data with newer entries on top
+      data.sort((a, b) => new Date(b.time_log) - new Date(a.time_log));
+
+      // Loop through each record and create table rows
+      tbody.innerHTML = data.map((item, index) => {
+        // Figure out the color and text based on status
+        // If rfid_status is null, it means RFID not found
+        let statusClass, statusText;
+        if (item.rfid_status === null) {
+          statusClass = 'status-not-found';
+          statusText = 'RFID NOT FOUND';
+        } else {
+          statusClass = item.rfid_status ? 'status-found' : 'status-not-found';
+          statusText = item.rfid_status ? '1' : '0';
+        }
+        
+        // Converting the datetime to GMT+8 with AM/PM format
+        // Had to look up how to do timezone conversion in JavaScript
+        const date = new Date(item.time_log);
+        
+        // Getting the date part first (MM/DD/YYYY)
+        const dateStr = date.toLocaleDateString('en-US', {
+          timeZone: 'Asia/Taipei',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        
+        // Then the time part with AM/PM
+        // Setting hour12 to true to get AM/PM instead of 24-hour format
+        const timeStr = date.toLocaleTimeString('en-US', {
+          timeZone: 'Asia/Taipei',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        });
+        
+        // Combining date and time
+        const datetime = `${dateStr}, ${timeStr}`;
+
+        // Creating the HTML for each row
+        return `
+          <tr>
+            <td>${index + 1}.</td>
+            <td class="rfid-cell">${item.rfid_data}</td>
+            <td class="${statusClass}">${statusText}</td>
+            <td class="datetime-cell">${datetime}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Function to toggle RFID status
+    async function toggleRFIDStatus(rfidData, isChecked) {
+      try {
+        const response = await fetch('/api/rfid-reg/update-status', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            rfid_data: rfidData,
+            status: isChecked
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Refresh both registered RFIDs and logs to show the new entry and sync UI
+          loadRegisteredRFIDs();
+          loadRFIDData();
+        } else {
+          console.error('Failed to update RFID status:', result.message);
+          // Revert the switch if update failed
+          document.querySelector(`input[data-rfid="${rfidData}"]`).checked = !isChecked;
+          alert('Failed to update RFID status: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error updating RFID status:', error);
+        // Revert the switch if update failed
+        document.querySelector(`input[data-rfid="${rfidData}"]`).checked = !isChecked;
+        alert('Error updating RFID status');
+      }
+    }
+
+    // Function to sync switch states with database
+    function syncSwitchStates() {
+      // Get all registered RFIDs from the current display
+      const rfidItems = document.querySelectorAll('.rfid-item');
+
+      rfidItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const rfidData = checkbox.getAttribute('data-rfid');
+        const isCurrentlyChecked = checkbox.checked;
+        const shouldBeChecked = item.classList.contains('rfid-active');
+
+        // If there's a mismatch between checkbox state and database state, fix it
+        if (isCurrentlyChecked !== shouldBeChecked) {
+          checkbox.checked = shouldBeChecked;
+          console.log(`Synced switch for RFID ${rfidData}: ${isCurrentlyChecked} -> ${shouldBeChecked}`);
+        }
+      });
+    }
+
+    // Function to update MQTT status display
+    async function updateMqttStatus() {
+      try {
+        const response = await fetch('/api/mqtt/status');
+        const result = await response.json();
+
+        if (result.success) {
+          const status = result.status;
+          const statusEl = document.getElementById('mqtt-status');
+
+          let statusText, statusClass;
+          switch (status.status) {
+            case 'connected':
+              statusText = 'MQTT: ✓ Connected';
+              statusClass = 'mqtt-status success';
+              break;
+            case 'connecting':
+              statusText = 'MQTT: Connecting...';
+              statusClass = 'mqtt-status testing';
+              break;
+            case 'error':
+              statusText = 'MQTT: ✗ Error';
+              statusClass = 'mqtt-status error';
+              break;
+            default:
+              statusText = 'MQTT: Disconnected';
+              statusClass = 'mqtt-status error';
+          }
+
+          statusEl.textContent = statusText;
+          statusEl.className = statusClass;
+        }
+      } catch (error) {
+        console.error('Error updating MQTT status:', error);
+        const statusEl = document.getElementById('mqtt-status');
+        statusEl.textContent = 'MQTT: Status unknown';
+        statusEl.className = 'mqtt-status error';
+      }
+    }
+
+    // Function to test MQTT connection
+    async function testMQTT() {
+      const btn = document.getElementById('test-mqtt-btn');
+      const status = document.getElementById('mqtt-status');
+
+      // Disable button and show testing
+      btn.disabled = true;
+      btn.textContent = 'Testing...';
+      status.textContent = 'MQTT: Testing...';
+      status.className = 'mqtt-status testing';
+
+      try {
+        const testMessage = `test_${Date.now()}`;
+        const response = await fetch('/api/rfid-logs/test-mqtt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: testMessage
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          status.textContent = 'MQTT: ✓ Test sent';
+          status.className = 'mqtt-status success';
+          console.log('MQTT test successful:', result);
+        } else {
+          status.textContent = 'MQTT: ✗ Test failed';
+          status.className = 'mqtt-status error';
+          console.error('MQTT test failed:', result);
+        }
+      } catch (error) {
+        status.textContent = 'MQTT: ✗ Connection error';
+        status.className = 'mqtt-status error';
+        console.error('Error testing MQTT:', error);
+      }
+
+      // Re-enable button after 3 seconds
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = 'Test MQTT Connection';
+        // Refresh status after test
+        updateMqttStatus();
+      }, 3000);
+    }
+
+    // Run this when the page finishes loading
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRegisteredRFIDs();
+      loadRFIDData();
+      updateMqttStatus();
+
+      // Refresh the data every 5 seconds to show real-time updates
+      // Using setInterval to call loadRFIDData repeatedly
+      setInterval(() => {
+        loadRegisteredRFIDs();
+        loadRFIDData();
+      }, 5000);
+
+      // Also sync switches every 2 seconds to catch any external changes
+      setInterval(syncSwitchStates, 2000);
+
+      // Update MQTT status every 10 seconds
+      setInterval(updateMqttStatus, 10000);
+    });
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('Service Worker registered successfully:', registration);
+          })
+          .catch(error => {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
