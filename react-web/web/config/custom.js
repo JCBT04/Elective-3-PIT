@@ -21,7 +21,7 @@ module.exports.custom = {
 
   // MQTT Configuration
   mqtt: {
-    host: process.env.MQTT_HOST || '10.119.157.134',
+    host: process.env.MQTT_HOST || '192.168.254.102',
     port: process.env.MQTT_PORT || 1883,
     topic: process.env.MQTT_TOPIC || 'RFID_LOGIN',
     clientId: process.env.MQTT_CLIENT_ID || 'Web_Teves',

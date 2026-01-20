@@ -3,14 +3,18 @@
 #include <PubSubClient.h>
 
 // Pin definitions
-#define RELAY_PIN 26
+#define RELAY_PIN 27
+
+// Relay active level: set to LOW for active-low relay modules
+const int RELAY_ACTIVE_LEVEL = LOW;
+const int RELAY_OFF_LEVEL = (RELAY_ACTIVE_LEVEL == LOW) ? HIGH : LOW;
 
 // WiFi and MQTT configurations
 WiFiMulti wifiMulti;
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-const char* mqtt_server = "10.119.157.134";
+const char* mqtt_server = "192.168.254.102";
 const int mqtt_port = 1883;
 const char* mqtt_topic = "RFID_LOGIN";
 
@@ -24,6 +28,12 @@ struct WiFiCredentials {
 WiFiCredentials networks[] = {
     {"Cloud Control Network", "ccv7network"},
     {"JCBT0", "jcbt0404"},
+    {"JCBT", "jhunel123"},
+    {"Redmi Note 13 Pro 5G", "jhunel123"},
+    {"GlobeAtHome_41C2C", "65HF90A66Y6"},
+
+
+
 };
 
 // Function declarations
@@ -40,17 +50,40 @@ void setup() {
 
     // Display startup banner
     Serial.println("\n\n=================================");
-    Serial.println("Teambot ESP32 Relay");
+    Serial.println("ESP32 Relay");
     Serial.println("=================================\n");
+
+    // Scan for available networks first
+    Serial.println("Scanning for WiFi networks...");
+    int n = WiFi.scanNetworks();
+    Serial.print("Scan complete. Found ");
+    Serial.print(n);
+    Serial.println(" networks:");
+    for (int i = 0; i < n; ++i) {
+        Serial.print(i + 1);
+        Serial.print(": ");
+        Serial.print(WiFi.SSID(i));
+        Serial.print(" (");
+        Serial.print(WiFi.RSSI(i));
+        Serial.print(" dBm)");
+        if (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) {
+            Serial.println(" - Open");
+        } else {
+            Serial.println(" - Encrypted");
+        }
+    }
+    Serial.println();
 
     // Initialize relay pin
     Serial.println("Initializing relay pin...");
     pinMode(RELAY_PIN, OUTPUT);
-    digitalWrite(RELAY_PIN, HIGH);  // Set relay to OFF state
+    digitalWrite(RELAY_PIN, RELAY_OFF_LEVEL);  // Set relay to OFF state
     delay(100);
 
     Serial.printf("✓ Relay Pin: GPIO %d initialized\n", RELAY_PIN);
-    Serial.println("✓ Relay state: OFF (HIGH)\n");
+    Serial.printf("✓ Relay state: %s (%s)\n\n", 
+                  digitalRead(RELAY_PIN) == RELAY_ACTIVE_LEVEL ? "ON" : "OFF",
+                  digitalRead(RELAY_PIN) == LOW ? "LOW" : "HIGH");
 
     // Add WiFi networks to multi-connect
     for (int i = 0; i < sizeof(networks) / sizeof(networks[0]); i++) {
@@ -97,11 +130,11 @@ void loop() {
         if (cmd == '1') {
             Serial.println("Manual command: RELAY ON");
             pulseRelayOn();
-            Serial.println("💡 LED: ON (manual)");
+            Serial.println("Relay: ON (manual)");
         } else if (cmd == '0') {
             Serial.println("Manual command: RELAY OFF");
             pulseRelayOff();
-            Serial.println("💡 LED: OFF (manual)");
+            Serial.println("Relay: OFF (manual)");
         }
     }
 
@@ -109,41 +142,25 @@ void loop() {
 }
 
 void pulseRelayOn() {
-    Serial.println("  [Pulsing relay contacts to ensure engagement...]");
-
-    // Pulse the relay three times to ensure engagement
-    for (int i = 0; i < 3; i++) {
-        digitalWrite(RELAY_PIN, HIGH);
-        delay(50);
-        digitalWrite(RELAY_PIN, LOW);
-        delay(50);
-    }
+    Serial.println("  [Setting relay to ON...]");
 
     // Set relay to ON state
-    digitalWrite(RELAY_PIN, LOW);
-    delay(50);
+    digitalWrite(RELAY_PIN, RELAY_ACTIVE_LEVEL);
+    delay(100);
 
     // Log the GPIO state
-    Serial.printf("  GPIO state: %s\n", digitalRead(RELAY_PIN) == LOW ? "LOW (should be ON)" : "HIGH");
+    Serial.printf("  GPIO state: %s\n", digitalRead(RELAY_PIN) == RELAY_ACTIVE_LEVEL ? "ACTIVE (ON)" : "INACTIVE (OFF)");
 }
 
 void pulseRelayOff() {
-    Serial.println("  [Pulsing relay contacts to disengage...]");
-
-    // Pulse the relay three times to disengage
-    for (int i = 0; i < 3; i++) {
-        digitalWrite(RELAY_PIN, LOW);
-        delay(50);
-        digitalWrite(RELAY_PIN, HIGH);
-        delay(50);
-    }
+    Serial.println("  [Setting relay to OFF...]");
 
     // Set relay to OFF state
-    digitalWrite(RELAY_PIN, HIGH);
-    delay(50);
+    digitalWrite(RELAY_PIN, RELAY_OFF_LEVEL);
+    delay(100);
 
     // Log the GPIO state
-    Serial.printf("  GPIO state: %s\n", digitalRead(RELAY_PIN) == HIGH ? "HIGH (should be OFF)" : "LOW");
+    Serial.printf("  GPIO state: %s\n", digitalRead(RELAY_PIN) == RELAY_OFF_LEVEL ? "INACTIVE (OFF)" : "ACTIVE (ON)");
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
@@ -162,11 +179,11 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     if (message == "1") {
         Serial.println(">>> Command: RELAY ON");
         pulseRelayOn();
-        Serial.println("💡 LED: ON");
+        Serial.println("Relay: ON");
     } else if (message == "0") {
         Serial.println(">>> Command: RELAY OFF");
         pulseRelayOff();
-        Serial.println("💡 LED: OFF");
+        Serial.println("Relay: OFF");
     } else {
         Serial.printf("⚠️  Unknown: %s\n", message.c_str());
     }

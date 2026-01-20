@@ -2,7 +2,7 @@
   "name": "react-web",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://10.119.157.134:1337",
+  "proxy": "http://192.168.254.102:1337",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",

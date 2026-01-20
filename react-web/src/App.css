@@ -1,4 +1,4 @@
-/* RFID Logs Styles */
+/* RFID Logs - Dark Theme Professional Styles */
 
 * {
   margin: 0;
@@ -6,155 +6,493 @@
   box-sizing: border-box;
 }
 
+@keyframes slideInRow {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+  }
+}
+
 .app {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
   min-height: 100vh;
-  padding: 20px;
+  padding: 24px;
   display: flex;
+  gap: 24px;
+  position: relative;
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .sidebar {
-  width: 300px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  margin-right: 20px;
+  width: 320px;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(139, 92, 246, 0.2);
   height: fit-content;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.4s ease;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(139, 92, 246, 0.1);
 }
 
 .sidebar h2 {
-  color: #333;
-  font-size: 1.4em;
+  color: #e2e8f0;
+  font-size: 1.5em;
+  font-weight: 700;
   margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 16px;
+  border-bottom: 3px solid rgba(139, 92, 246, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar h2::before {
+  content: '📡';
+  font-size: 1.2em;
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
 }
 
 .main-content {
   flex: 1;
+  min-width: 0;
+  animation: fadeIn 0.5s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .container {
-  max-width: 1200px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 100%;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.1);
 }
 
 /* Header */
 header {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.2);
 }
 
 header h1 {
-  color: #333;
-  font-size: 2em;
-  margin-bottom: 10px;
+  color: #f1f5f9;
+  font-size: 2.25em;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.4));
+  letter-spacing: -0.5px;
 }
 
 header p {
-  color: #666;
-  font-size: 1.1em;
+  color: #94a3b8;
+  font-size: 1em;
+  font-weight: 500;
 }
 
 /* Header Controls */
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-top: 15px;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  color: white;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  margin-left: auto;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  animation: glow 3s ease-in-out infinite;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e2e8f0;
+  font-size: 0.95em;
+  outline: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.search-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+.header-meta {
+  margin-top: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-summary {
+  color: #94a3b8;
+  font-size: 0.95em;
+  font-weight: 600;
 }
 
 .test-btn {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
   color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  border: 2px solid rgba(139, 92, 246, 0.4);
+  padding: 12px 24px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 0.9em;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 16px rgba(139, 92, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  min-height: 44px;
+}
+
+.test-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.test-btn:hover:not(:disabled)::before {
+  left: 100%;
 }
 
 .test-btn:hover:not(:disabled) {
-  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(139, 92, 246, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(139, 92, 246, 0.6);
+}
+
+.test-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 
+    0 3px 12px rgba(139, 92, 246, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .test-btn:disabled {
-  background-color: #6c757d;
+  background: linear-gradient(135deg, #475569 0%, #334155 100%);
   cursor: not-allowed;
+  box-shadow: 
+    0 4px 12px rgba(71, 85, 105, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(71, 85, 105, 0.4);
+  opacity: 0.7;
 }
 
 .mqtt-status {
   font-size: 0.9em;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  min-height: 44px;
+}
+
+.mqtt-status::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.mqtt-status:hover::after {
+  left: 100%;
+}
+
+.mqtt-status::before {
+  content: '●';
+  font-size: 1.4em;
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px currentColor);
+  position: relative;
+  z-index: 1;
 }
 
 .mqtt-status.testing {
-  background-color: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeaa7;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%);
+  color: #fcd34d;
+  box-shadow: 
+    0 4px 16px rgba(251, 191, 36, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(251, 191, 36, 0.4);
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
 }
 
 .mqtt-status.success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.25) 0%, rgba(16, 185, 129, 0.25) 100%);
+  color: #6ee7b7;
+  box-shadow: 
+    0 4px 16px rgba(52, 211, 153, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(52, 211, 153, 0.4);
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
 }
 
 .mqtt-status.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.25) 0%, rgba(239, 68, 68, 0.25) 100%);
+  color: #fca5a5;
+  box-shadow: 
+    0 4px 16px rgba(248, 113, 113, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(248, 113, 113, 0.4);
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+}
+
+/* Default/Unknown state for MQTT */
+.mqtt-status:not(.testing):not(.success):not(.error) {
+  background: linear-gradient(135deg, rgba(100, 116, 139, 0.25) 0%, rgba(71, 85, 105, 0.25) 100%);
+  color: #94a3b8;
+  box-shadow: 
+    0 4px 16px rgba(100, 116, 139, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(100, 116, 139, 0.4);
+  text-shadow: 0 0 10px rgba(100, 116, 139, 0.5);
 }
 
 /* Table Styles */
 .table-container {
   overflow-x: auto;
-  margin-top: 20px;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+  margin-top: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  scrollbar-width: thin;
+  scrollbar-color: #8b5cf6 rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  background-color: white;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: rgba(15, 23, 42, 0.8);
 }
 
 thead {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
   color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 th {
-  padding: 15px;
+  padding: 16px 20px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   border-bottom: none;
-  font-size: 1em;
+}
+
+th:first-child {
+  border-top-left-radius: 12px;
+}
+
+th:last-child {
+  border-top-right-radius: 12px;
 }
 
 td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #e9ecef;
-  color: #495057;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  color: #cbd5e1;
   text-align: center;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
+tbody tr {
+  transition: all 0.2s ease;
+  background: rgba(30, 41, 59, 0.5);
+  animation: slideInRow 0.3s ease forwards;
+  opacity: 0;
+}
+
+tbody tr:nth-child(1) { animation-delay: 0.05s; }
+tbody tr:nth-child(2) { animation-delay: 0.1s; }
+tbody tr:nth-child(3) { animation-delay: 0.15s; }
+tbody tr:nth-child(4) { animation-delay: 0.2s; }
+tbody tr:nth-child(5) { animation-delay: 0.25s; }
+tbody tr:nth-child(6) { animation-delay: 0.3s; }
+tbody tr:nth-child(7) { animation-delay: 0.35s; }
+tbody tr:nth-child(8) { animation-delay: 0.4s; }
+tbody tr:nth-child(9) { animation-delay: 0.45s; }
+tbody tr:nth-child(10) { animation-delay: 0.5s; }
+
 tbody tr:hover {
-  background: rgba(102, 126, 234, 0.1);
-  transition: background-color 0.2s ease;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+  transform: scale(1.005);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+tbody tr td:first-child {
+  width: 60px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
 }
 
 tbody tr:last-child td {
@@ -163,136 +501,227 @@ tbody tr:last-child td {
 
 /* Status Indicators */
 .status-found {
-  color: #28a745;
-  font-weight: 600;
+  color: #34d399;
+  font-weight: 700;
+  background: rgba(52, 211, 153, 0.25);
+  padding: 8px 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95em;
+  border: 2px solid rgba(52, 211, 153, 0.4);
+  box-shadow: 
+    0 0 16px rgba(52, 211, 153, 0.3),
+    inset 0 0 8px rgba(52, 211, 153, 0.2);
+  min-width: 40px;
+  height: 40px;
 }
 
 .status-not-found {
-  color: #dc3545;
-  font-weight: 600;
+  color: #f87171;
+  font-weight: 700;
+  background: rgba(248, 113, 113, 0.25);
+  padding: 8px 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95em;
+  border: 2px solid rgba(248, 113, 113, 0.4);
+  box-shadow: 
+    0 0 16px rgba(248, 113, 113, 0.3),
+    inset 0 0 8px rgba(248, 113, 113, 0.2);
+  min-width: 40px;
+  height: 40px;
 }
 
 .status-number {
-  color: #007bff;
-  font-weight: 600;
+  color: #60a5fa;
+  font-weight: 700;
 }
 
 /* RFID Column */
 .rfid-cell {
-  font-family: 'Courier New', monospace;
-  font-weight: 500;
-  color: #212529;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 0.9em;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 8px 12px !important;
+  border-radius: 6px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 /* Date & Time Column */
 .datetime-cell {
-  color: #6c757d;
+  color: #94a3b8;
   white-space: nowrap;
+  font-size: 0.9em;
 }
 
 /* Empty State */
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #6c757d;
+  padding: 80px 20px;
+  color: #94a3b8;
 }
 
 .empty-state h3 {
   font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #495057;
+  margin-bottom: 12px;
+  color: #cbd5e1;
+  font-weight: 700;
 }
 
 .empty-state p {
   font-size: 1em;
+  font-weight: 500;
 }
 
 /* Loading State */
 .loading {
   text-align: center;
-  padding: 40px;
-  color: #6c757d;
-  font-size: 1.2em;
+  padding: 60px;
+  color: #e2e8f0;
+  font-size: 1.4em;
+  font-weight: 600;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 /* Sidebar Styles */
 #registered-rfids {
-  max-height: 600px;
+  max-height: calc(100vh - 250px);
   overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #8b5cf6 transparent;
+}
+
+#registered-rfids::-webkit-scrollbar {
+  width: 6px;
+}
+
+#registered-rfids::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#registered-rfids::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8b5cf6 0%, #3b82f6 100%);
+  border-radius: 10px;
+}
+
+#registered-rfids::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a78bfa 0%, #60a5fa 100%);
 }
 
 .rfid-item {
-  padding: 12px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  border: 1px solid #e9ecef;
-  background-color: #f8f9fa;
-  transition: all 0.2s ease;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.rfid-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  transition: all 0.3s ease;
 }
 
 .rfid-item:hover {
-  background-color: #e9ecef;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgba(139, 92, 246, 0.6);
+  transform: translateX(6px) scale(1.02);
+  box-shadow: 
+    0 4px 20px rgba(139, 92, 246, 0.4),
+    0 0 0 1px rgba(139, 92, 246, 0.3);
 }
 
 .rfid-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 10px;
+}
+
+.rfid-active::before {
+  background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.6);
 }
 
 .rfid-active {
-  border-left: 4px solid #28a745;
+  border-color: rgba(52, 211, 153, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+}
+
+.rfid-inactive::before {
+  background: linear-gradient(180deg, #f87171 0%, #ef4444 100%);
+  box-shadow: 0 0 12px rgba(248, 113, 113, 0.6);
 }
 
 .rfid-inactive {
-  border-left: 4px solid #dc3545;
-  opacity: 0.7;
+  border-color: rgba(248, 113, 113, 0.3);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%);
+  opacity: 0.85;
 }
 
 .rfid-code {
-  font-family: 'Courier New', monospace;
-  font-weight: 500;
-  color: #212529;
-  font-size: 0.9em;
-  margin-bottom: 4px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 0.95em;
+  margin-bottom: 6px;
   word-break: break-all;
+  line-height: 1.4;
 }
 
 .rfid-status {
   font-size: 0.8em;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  padding: 4px 10px;
+  border-radius: 12px;
 }
 
 .rfid-active .rfid-status {
-  color: #28a745;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.2);
+  border: 1px solid rgba(52, 211, 153, 0.3);
 }
 
 .rfid-inactive .rfid-status {
-  color: #dc3545;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.2);
+  border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 .empty-sidebar {
   text-align: center;
-  padding: 40px 20px;
-  color: #6c757d;
+  padding: 60px 20px;
+  color: #64748b;
 }
 
 .empty-sidebar p {
-  font-size: 0.9em;
+  font-size: 0.95em;
   margin: 0;
+  font-weight: 500;
 }
 
-/* Switch Styles */
+/* Enhanced Switch Styles */
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 24px;
+  width: 52px;
+  height: 28px;
 }
 
 .switch input {
@@ -308,47 +737,77 @@ tbody tr:last-child td {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 24px;
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 28px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
+  height: 22px;
+  width: 22px;
   left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
+  bottom: 2px;
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 input:checked + .slider {
-  background-color: #28a745;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.5);
+  border-color: rgba(52, 211, 153, 0.4);
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(24px);
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .slider:hover {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .app {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+
+  .container {
+    padding: 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .app {
-    padding: 10px;
+    padding: 12px;
     flex-direction: column;
+    gap: 16px;
   }
 
   .sidebar {
     width: 100%;
-    margin-right: 0;
-    margin-bottom: 20px;
+    max-height: 400px;
     order: 1;
+  }
+
+  #registered-rfids {
+    max-height: 300px;
   }
 
   .main-content {
@@ -357,21 +816,40 @@ input:checked + .slider:before {
   }
 
   .container {
-    padding: 15px;
+    padding: 20px;
+  }
+
+  .table-container {
+    max-height: calc(100vh - 400px);
   }
 
   header h1 {
-    font-size: 1.4em;
+    font-size: 1.75em;
     margin-bottom: 8px;
   }
 
   header p {
-    font-size: 1em;
+    font-size: 0.95em;
+  }
+
+  .header-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .test-btn {
+    width: 100%;
+  }
+
+  .mqtt-status {
+    justify-content: center;
   }
 
   .table-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
   }
 
   table {
@@ -379,51 +857,49 @@ input:checked + .slider:before {
   }
 
   th, td {
-    padding: 8px 6px;
+    padding: 12px 8px;
     font-size: 0.85em;
   }
 
   .datetime-cell {
     font-size: 0.8em;
-    white-space: nowrap;
   }
 
   .rfid-cell {
     font-size: 0.8em;
-    word-break: break-all;
     max-width: 120px;
   }
 
   .sidebar h2 {
-    font-size: 1.2em;
-    margin-bottom: 15px;
+    font-size: 1.3em;
+    margin-bottom: 16px;
   }
 
   .rfid-item {
-    padding: 12px 10px;
-    margin-bottom: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
   }
 
   .rfid-code {
     font-size: 0.85em;
-    margin-bottom: 6px;
   }
 
   .rfid-controls {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5em;
   }
 
-  .rfid-status {
+  .container {
+    padding: 16px;
+  }
+
+  th, td {
+    padding: 10px 6px;
     font-size: 0.8em;
-  }
-
-  .switch {
-    cursor: pointer;
-  }
-
-  .test-btn, .rfid-item {
-    min-height: 44px;
   }
 }

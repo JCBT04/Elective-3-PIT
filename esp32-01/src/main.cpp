@@ -17,15 +17,20 @@ void reconnectMQTT();
 // const char* ssid = "Cloud Control Network";
 // const char* password = "ccv7network";
 
-const char* ssid = "JCBT0";
-const char* password ="jcbt0404";
+// const char* ssid = "JCBT0";
+// const char* password ="jcbt0404";
 
+// const char* ssid = "JCBT";
+// const char* password ="jhunel123";
+
+const char* ssid = "GlobeAtHome_41C2C";
+const char* password ="65HF90A66Y6";
 
 // PHP server URL
-const char* serverUrl = "http://10.119.157.134/rfid_handler.php";
+const char* serverUrl = "http://192.168.254.102/rfid_handler.php";
 
 // MQTT broker details
-const char* mqttServer = "10.119.157.134";
+const char* mqttServer = "192.168.254.102";
 const int mqttPort = 1883;
 const char* mqttTopic = "RFID_LOGIN";
 const char* pingTopic = "ESP32_PING";
@@ -231,21 +236,15 @@ void loop() {
   }
   cardID.toUpperCase();
   
-  Serial.println("==========================");
-  Serial.print("Card Scanned: ");
-  Serial.println(cardID);
-
-  // Send data to server
+  // Send data to server (sendToServer will print the scanned-card block)
   sendToServer(cardID);
-
+  
   // Halt PICC
   mfrc522.PICC_HaltA();
-
+  
   // Stop encryption on PCD
   mfrc522.PCD_StopCrypto1();
-
-  Serial.println("==========================");
-
+  
   // Delay before next read
   delay(2000);
 }
@@ -286,9 +285,10 @@ void sendToServer(String rfidData) {
     
     // Prepare URL with query parameter
     String url = String(serverUrl) + "?rfid=" + rfidData;
-    
-    Serial.print("Sending request to: ");
-    Serial.println(url);
+    // Print formatted block for scanned card / server response
+    Serial.println("==================================");
+    Serial.printf("Card Scanned: %s\n", rfidData.c_str());
+    Serial.printf("Sending request to: %s\n", url.c_str());
     
     // Begin HTTP connection
     http.begin(url);
@@ -302,8 +302,7 @@ void sendToServer(String rfidData) {
     
     if (httpResponseCode > 0) {
       String response = http.getString();
-      Serial.print("Server Response: ");
-      Serial.println(response);
+      Serial.printf("Server Response: %s\n", response.c_str());
       
       // Parse response
       if (response.indexOf("NOT FOUND") != -1) {
@@ -331,6 +330,7 @@ void sendToServer(String rfidData) {
           }
         }
       }
+      Serial.println("========================================\n");
     } else {
       Serial.print("Error sending request. HTTP Code: ");
       Serial.println(httpResponseCode);
